@@ -43,6 +43,25 @@ Matrix3x3 Multiply(Matrix3x3 matrix1, Matrix3x3 matrix2) {
 	return result;
 }
 
+//	Šgks—ñ‚Ìì¬ŠÖ”
+Matrix3x3 MakeScaleMatrix(Vec2 scale) {
+	Matrix3x3 result;
+	//	‰Šú‰»
+	for (int y = 0; y < 3; y++)
+	{
+		for (int x = 0; x < 3; x++)
+		{
+			result.m[y][x] = 0.0f;
+		}
+	}
+	//	‘ã“ü
+	result.m[0][0] = scale.x;
+	result.m[1][1] = scale.y;
+	result.m[2][2] = 1.0f;
+
+	return result;
+}
+
 //	‰ñ“]s—ñ‚Ìì¬ŠÖ”
 Matrix3x3 MakeRotateMatrix(float theta) {
 	theta *= M_PI / 180.0f;
@@ -57,6 +76,7 @@ Matrix3x3 MakeRotateMatrix(float theta) {
 		}
 	}
 
+	//	‘ã“ü
 	result.m[0][0] = cosf(theta);
 	result.m[0][1] = sinf(theta);
 	result.m[1][0] = -sinf(theta);
@@ -69,13 +89,18 @@ Matrix3x3 MakeRotateMatrix(float theta) {
 //	•½sˆÚ“®s—ñ‚Ìì¬ŠÖ”
 Matrix3x3 MakeTranslateMatrix(Vec2 translate) {
 	Matrix3x3 result;
+	//	‰Šú‰»
+	for (int y = 0; y < 3; y++)
+	{
+		for (int x = 0; x < 3; x++)
+		{
+			result.m[y][x] = 0.0f;
+		}
+	}
 
+	//	‘ã“ü
 	result.m[0][0] = 1.0f;
-	result.m[0][1] = 0.0f;
-	result.m[0][2] = 0.0f;
-	result.m[1][0] = 0.0f;
 	result.m[1][1] = 1.0f;
-	result.m[1][2] = 0.0f;
 	result.m[2][2] = 1.0f;
 
 	result.m[2][0] = translate.x;

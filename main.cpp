@@ -15,6 +15,8 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR lpCmdLine, _In
 	char preKeys[256] = {0};
 
 	float theta = 0.0f;
+	Vec2 scale = { 1.0f,1.0f };
+	bool isScale = false;
 
 	struct Object
 	{
@@ -39,6 +41,7 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR lpCmdLine, _In
 	int block = Novice::LoadTexture("white1x1.png");
 
 	//	行列の作成
+	Matrix3x3 scaleMatrix;
 	Matrix3x3 rotateMatrix;
 	Matrix3x3 translateMatrix;
 
@@ -80,6 +83,28 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR lpCmdLine, _In
 			object.centerPos.y -= object.speed.y;
 		}
 
+		//	拡大率
+		if (scale.x > 2.0f)
+		{
+			isScale = false;
+		}
+		else if(scale.x < 0.5f)
+		{
+			isScale = true;
+		}
+
+		if (isScale == true)
+		{
+			scale.x += 0.05f;
+			scale.y += 0.05f;
+		}
+		else
+		{
+			scale.x -= 0.05f;
+			scale.y -= 0.05f;
+		}
+
+		//	回転
 		theta += 5.0f;
 		if (theta > 360.0f)
 		{
@@ -88,10 +113,12 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR lpCmdLine, _In
 
 
 		//	行列の作成
+		scaleMatrix = MakeScaleMatrix(scale);
 		rotateMatrix = MakeRotateMatrix(theta);
 		translateMatrix = MakeTranslateMatrix(object.centerPos);
 
-		worldMatrix = Multiply(rotateMatrix, translateMatrix);
+		worldMatrix = Multiply(scaleMatrix, rotateMatrix);
+		worldMatrix = Multiply(worldMatrix, translateMatrix);
 
 		//
 		worldLeftTop		= Transform(object.LT, worldMatrix);

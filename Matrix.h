@@ -13,6 +13,9 @@ struct Matrix3x3
 //	Ï
 Matrix3x3 Multiply(Matrix3x3 matrix1, Matrix3x3 matrix2);
 
+//	Šgks—ñ‚Ìì¬ŠÖ”
+Matrix3x3 MakeScaleMatrix(Vec2 scale);
+
 //	‰ñ“]s—ñ‚Ìì¬ŠÖ”
 Matrix3x3 MakeRotateMatrix(float theta);
 
