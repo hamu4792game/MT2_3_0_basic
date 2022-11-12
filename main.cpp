@@ -14,7 +14,7 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR lpCmdLine, _In
 	char keys[256] = {0};
 	char preKeys[256] = {0};
 
-	float theta = 0.1f;
+	float theta = 1.0f;
 
 	struct Object
 	{
@@ -28,18 +28,25 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR lpCmdLine, _In
 	Object object{
 		{400,100},
 		{200,100},
-		{100,50},
-		{300,50},
-		{100,150},
-		{300,150},
+		{object.size.x / -2.0f,object.size.y / 2.0f},
+		{object.size.x / 2.0f,object.size.y / 2.0f},
+		{object.size.x / -2.0f,object.size.y / -2.0f},
+		{object.size.x / 2.0f,object.size.y / -2.0f},
 	};
 
 	int block = Novice::LoadTexture("white1x1.png");
 
 	//	行列の作成
-	Matrix3x3 rotateMatrix = MakeRotateMatrix(theta);
-	Matrix3x3 translateMatrix = MakeTranslateMatrix(object.centerPos);
+	Matrix3x3 rotateMatrix;
+	Matrix3x3 translateMatrix;
 
+	Matrix3x3 worldMatrix;
+
+
+	Vec2 worldLeftTop;
+	Vec2 worldRightTop;
+	Vec2 worldLeftBottom;
+	Vec2 worldRightBottom;
 
 	// ウィンドウの×ボタンが押されるまでループ
 	while (Novice::ProcessMessage() == 0) {
@@ -63,23 +70,26 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR lpCmdLine, _In
 			object.centerPos.x -= 10;
 		}
 
+		theta += 1.0f;
+		if (theta > 360.0f)
+		{
+			theta = 0.0f;
+		}
+
+
 		//	行列の作成
-		Matrix3x3 rotateMatrix = MakeRotateMatrix(theta);
-		Matrix3x3 translateMatrix = MakeTranslateMatrix(object.centerPos);
+		rotateMatrix = MakeRotateMatrix(theta);
+		translateMatrix = MakeTranslateMatrix(object.centerPos);
 
-		Matrix3x3 worldMatrix = Multiply(rotateMatrix, translateMatrix);
+		worldMatrix = Multiply(rotateMatrix, translateMatrix);
 
+//		worldMatrix = translateMatrix;
 
-		Vec2 worldLeftTop		= Transform(object.LT, worldMatrix);
-		Vec2 worldRightTop		= Transform(object.RT, worldMatrix);
-		Vec2 worldLeftBottom	= Transform(object.LB, worldMatrix);
-		Vec2 worldRightBottom	= Transform(object.RB, worldMatrix);
+		worldLeftTop		= Transform(object.LT, worldMatrix);
+		worldRightTop		= Transform(object.RT, worldMatrix);
+		worldLeftBottom		= Transform(object.LB, worldMatrix);
+		worldRightBottom	= Transform(object.RB, worldMatrix);
 
-
-		
-
-		worldLeftTop.x += object.centerPos.x;
-		worldLeftTop.y += object.centerPos.y;
 
 
 		///
@@ -96,16 +106,20 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR lpCmdLine, _In
 		Vec2 screenRightBottom	= Change(worldRightBottom);
 
 
-		Novice::DrawQuad(screenLeftTop.x, screenLeftTop.y,
-			screenRightTop.x, screenRightTop.y,
-			screenLeftBottom.x, screenLeftBottom.y,
-			screenRightBottom.x, screenRightBottom.y,
+		Novice::DrawQuad((int)screenLeftTop.x, (int)screenLeftTop.y,
+			(int)screenRightTop.x, (int)screenRightTop.y,
+			(int)screenLeftBottom.x, (int)screenLeftBottom.y,
+			(int)screenRightBottom.x, (int)screenRightBottom.y,
 			0, 0, 1, 1, block, 0xffffffff);
 
 
 		Novice::ScreenPrintf(0, 0, "%02f", object.centerPos.x);
 		Novice::ScreenPrintf(100, 0, "%02f", object.centerPos.y);
-		Novice::ScreenPrintf(0, 20, "%f", screenLeftTop);
+		Novice::ScreenPrintf(0, 20, "%f", object.LT.x);
+		Novice::ScreenPrintf(100, 20, "%f", object.LT.y);
+		
+		Novice::ScreenPrintf(0, 40, "%f", object.RT.x);
+		Novice::ScreenPrintf(100, 40, "%f", object.RT.y);
 
 		///
 		/// ↑描画処理ここまで

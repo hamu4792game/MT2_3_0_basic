@@ -1,37 +1,67 @@
 #include "Matrix.h"
 #include <assert.h>
 #include <Novice.h>
+#define _USE_MATH_DEFINES
 #include <math.h>
 
 //	êœ
 Matrix3x3 Multiply(Matrix3x3 matrix1, Matrix3x3 matrix2) {
 	Matrix3x3 result;
-	result.m[0][0] = (matrix1.m[0][0] * matrix2.m[0][0]) + (matrix1.m[0][1] * matrix2.m[1][0]) + (matrix1.m[0][2] * matrix2.m[2][0]);
-	result.m[0][1] = (matrix1.m[0][0] * matrix2.m[0][1]) + (matrix1.m[0][1] * matrix2.m[1][1]) + (matrix1.m[0][2] * matrix2.m[2][2]);
-	result.m[0][2] = (matrix1.m[0][0] * matrix2.m[0][2]) + (matrix1.m[0][1] * matrix2.m[1][2]) + (matrix1.m[0][2] * matrix2.m[2][2]);
+//	result.m[0][0] = (matrix1.m[0][0] * matrix2.m[0][0]) + (matrix1.m[0][1] * matrix2.m[1][0]) + (matrix1.m[0][2] * matrix2.m[2][0]);
+//	result.m[0][1] = (matrix1.m[0][0] * matrix2.m[0][1]) + (matrix1.m[0][1] * matrix2.m[1][1]) + (matrix1.m[0][2] * matrix2.m[2][1]);
+//	result.m[0][2] = (matrix1.m[0][0] * matrix2.m[0][2]) + (matrix1.m[0][1] * matrix2.m[1][2]) + (matrix1.m[0][2] * matrix2.m[2][2]);
+//
+//	result.m[1][0] = (matrix1.m[1][0] * matrix2.m[0][0]) + (matrix1.m[1][1] * matrix2.m[1][0]) + (matrix1.m[1][2] * matrix2.m[2][0]);
+//	result.m[1][1] = (matrix1.m[1][0] * matrix2.m[0][1]) + (matrix1.m[1][1] * matrix2.m[1][1]) + (matrix1.m[1][2] * matrix2.m[2][1]);
+//	result.m[1][2] = (matrix1.m[1][0] * matrix2.m[0][2]) + (matrix1.m[1][1] * matrix2.m[1][2]) + (matrix1.m[1][2] * matrix2.m[2][2]);
+//
+//	result.m[2][0] = (matrix1.m[2][0] * matrix2.m[0][0]) + (matrix1.m[2][1] * matrix2.m[1][0]) + (matrix1.m[2][2] * matrix2.m[2][0]);
+//	result.m[2][1] = (matrix1.m[2][0] * matrix2.m[0][1]) + (matrix1.m[2][1] * matrix2.m[1][1]) + (matrix1.m[2][2] * matrix2.m[2][1]);
+//	result.m[2][2] = (matrix1.m[2][0] * matrix2.m[0][2]) + (matrix1.m[2][1] * matrix2.m[1][2]) + (matrix1.m[2][2] * matrix2.m[2][2]);
 
-	result.m[1][0] = (matrix1.m[1][0] * matrix2.m[0][0]) + (matrix1.m[1][1] * matrix2.m[1][0]) + (matrix1.m[1][2] * matrix2.m[2][0]);
-	result.m[1][1] = (matrix1.m[1][0] * matrix2.m[0][1]) + (matrix1.m[1][1] * matrix2.m[1][1]) + (matrix1.m[1][2] * matrix2.m[2][1]);
-	result.m[1][2] = (matrix1.m[1][0] * matrix2.m[0][2]) + (matrix1.m[1][1] * matrix2.m[1][2]) + (matrix1.m[1][2] * matrix2.m[2][2]);
+	//	èâä˙âª
+	for (int y = 0; y < 3; y++)
+	{
+		for (int x = 0; x < 3; x++)
+		{
+			result.m[y][x] = 0.0f;
+		}
+	}
 
-	result.m[2][0] = (matrix1.m[2][0] * matrix2.m[0][0]) + (matrix1.m[2][1] * matrix2.m[1][0]) + (matrix1.m[2][2] * matrix2.m[2][0]);
-	result.m[2][1] = (matrix1.m[2][0] * matrix2.m[0][1]) + (matrix1.m[2][1] * matrix2.m[1][1]) + (matrix1.m[2][2] * matrix2.m[2][1]);
-	result.m[2][2] = (matrix1.m[2][0] * matrix2.m[0][2]) + (matrix1.m[2][1] * matrix2.m[1][2]) + (matrix1.m[2][2] * matrix2.m[2][2]);
+	//	
+	for (int y = 0; y < 3; y++)
+	{
+		for (int x = 0; x < 3; x++)
+		{
+			for (int i = 0; i < 3; i++)
+			{
+				result.m[y][x] += matrix1.m[y][i] * matrix2.m[i][x];
+			}
+		}
+	}
 
 	return result;
 }
 
 //	âÒì]çsóÒÇÃçÏê¨ä÷êî
 Matrix3x3 MakeRotateMatrix(float theta) {
-	Matrix3x3 result;
-	result.m[0][0] = cosf(theta);
-	result.m[1][0] = sinf(theta);
-	result.m[0][1] = -sinf(theta);
-	result.m[1][1] = cosf(theta);
+	theta *= M_PI / 180.0f;
 
-	result.m[0][2] = 0;
-	result.m[2][0] = 0;
-	result.m[2][2] = 1;
+	Matrix3x3 result;
+	//	èâä˙âª
+	for (int y = 0; y < 3; y++)
+	{
+		for (int x = 0; x < 3; x++)
+		{
+			result.m[y][x] = 0.0f;
+		}
+	}
+
+	result.m[0][0] = cosf(theta);
+	result.m[0][1] = sinf(theta);
+	result.m[1][0] = -sinf(theta);
+	result.m[1][1] = cosf(theta);
+	result.m[2][2] = 1.0f;
 
 	return result;
 }
