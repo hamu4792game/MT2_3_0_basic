@@ -14,7 +14,7 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR lpCmdLine, _In
 	char keys[256] = {0};
 	char preKeys[256] = {0};
 
-	float theta = 1.0f;
+	float theta = 0.0f;
 
 	struct Object
 	{
@@ -24,14 +24,16 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR lpCmdLine, _In
 		Vec2 RT;
 		Vec2 LB;
 		Vec2 RB;
+		Vec2 speed;
 	};
 	Object object{
-		{400,100},
-		{200,100},
+		{400.0f,100.0f},
+		{200.0f,100.0f},
 		{object.size.x / -2.0f,object.size.y / 2.0f},
 		{object.size.x / 2.0f,object.size.y / 2.0f},
 		{object.size.x / -2.0f,object.size.y / -2.0f},
 		{object.size.x / 2.0f,object.size.y / -2.0f},
+		{10.0f,10.0f},
 	};
 
 	int block = Novice::LoadTexture("white1x1.png");
@@ -63,14 +65,22 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR lpCmdLine, _In
 
 		if (keys[DIK_D])
 		{
-			object.centerPos.x += 10;
+			object.centerPos.x += object.speed.x;
 		}
 		if (keys[DIK_A])
 		{
-			object.centerPos.x -= 10;
+			object.centerPos.x -= object.speed.x;
+		}
+		if (keys[DIK_W])
+		{
+			object.centerPos.y += object.speed.y;
+		}
+		if (keys[DIK_S])
+		{
+			object.centerPos.y -= object.speed.y;
 		}
 
-		theta += 1.0f;
+		theta += 5.0f;
 		if (theta > 360.0f)
 		{
 			theta = 0.0f;
@@ -83,8 +93,7 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR lpCmdLine, _In
 
 		worldMatrix = Multiply(rotateMatrix, translateMatrix);
 
-//		worldMatrix = translateMatrix;
-
+		//
 		worldLeftTop		= Transform(object.LT, worldMatrix);
 		worldRightTop		= Transform(object.RT, worldMatrix);
 		worldLeftBottom		= Transform(object.LB, worldMatrix);
@@ -111,15 +120,6 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR lpCmdLine, _In
 			(int)screenLeftBottom.x, (int)screenLeftBottom.y,
 			(int)screenRightBottom.x, (int)screenRightBottom.y,
 			0, 0, 1, 1, block, 0xffffffff);
-
-
-		Novice::ScreenPrintf(0, 0, "%02f", object.centerPos.x);
-		Novice::ScreenPrintf(100, 0, "%02f", object.centerPos.y);
-		Novice::ScreenPrintf(0, 20, "%f", object.LT.x);
-		Novice::ScreenPrintf(100, 20, "%f", object.LT.y);
-		
-		Novice::ScreenPrintf(0, 40, "%f", object.RT.x);
-		Novice::ScreenPrintf(100, 40, "%f", object.RT.y);
 
 		///
 		/// ↑描画処理ここまで
