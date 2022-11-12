@@ -41,10 +41,6 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR lpCmdLine, _In
 	int block = Novice::LoadTexture("white1x1.png");
 
 	//	行列の作成
-	Matrix3x3 scaleMatrix;
-	Matrix3x3 rotateMatrix;
-	Matrix3x3 translateMatrix;
-
 	Matrix3x3 worldMatrix;
 
 
@@ -113,12 +109,7 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR lpCmdLine, _In
 
 
 		//	行列の作成
-		scaleMatrix = MakeScaleMatrix(scale);
-		rotateMatrix = MakeRotateMatrix(theta);
-		translateMatrix = MakeTranslateMatrix(object.centerPos);
-
-		worldMatrix = Multiply(scaleMatrix, rotateMatrix);
-		worldMatrix = Multiply(worldMatrix, translateMatrix);
+		worldMatrix = MakeAffineMatrix(scale, theta, object.centerPos);
 
 		//
 		worldLeftTop		= Transform(object.LT, worldMatrix);

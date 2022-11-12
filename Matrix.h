@@ -10,17 +10,8 @@ struct Matrix3x3
 	float m[3][3];
 };
 
-//	積
-Matrix3x3 Multiply(Matrix3x3 matrix1, Matrix3x3 matrix2);
-
-//	拡縮行列の作成関数
-Matrix3x3 MakeScaleMatrix(Vec2 scale);
-
-//	回転行列の作成関数
-Matrix3x3 MakeRotateMatrix(float theta);
-
-//	平行移動行列の作成関数
-Matrix3x3 MakeTranslateMatrix(Vec2 translate);
+//	アフィン変換行列の作成関数
+Matrix3x3 MakeAffineMatrix(Vec2 scale, float rotate, Vec2 translate);
 
 //	二次元ベクトルを同次座標として変換する
 Vec2 Transform(Vec2 vector, Matrix3x3 matrix);
