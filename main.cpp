@@ -63,19 +63,19 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR lpCmdLine, _In
 		/// ↓更新処理ここから
 		///
 
-		if (keys[DIK_D])
+		if (keys[DIK_D] || keys[DIK_RIGHT])
 		{
 			object.centerPos.x += object.speed.x;
 		}
-		if (keys[DIK_A])
+		if (keys[DIK_A] || keys[DIK_LEFT])
 		{
 			object.centerPos.x -= object.speed.x;
 		}
-		if (keys[DIK_W])
+		if (keys[DIK_W] || keys[DIK_UP])
 		{
 			object.centerPos.y += object.speed.y;
 		}
-		if (keys[DIK_S])
+		if (keys[DIK_S] || keys[DIK_DOWN])
 		{
 			object.centerPos.y -= object.speed.y;
 		}
